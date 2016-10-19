@@ -25,7 +25,7 @@ public interface View {
     void displayMaze(Maze3D maze);
     void displayCrossSection(int [][] mazeSection, int [][] mazeFloorUp, int [][] mazeFloorDown);
     void displayMessage(String msg);
-    void setSelectedMaze(Maze3D maze);
+    void setSelectedMaze(String name, Maze3D maze);
     void setSolutionAvailable(boolean solutionAvailable);
     void setNextStep(Position nextStep);
     //void printMenu(HashMap<String, Command> cliMapper);

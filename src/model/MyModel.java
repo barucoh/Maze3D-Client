@@ -152,6 +152,10 @@ public class MyModel extends Observable implements Model {
     public Maze3D getMaze(String name) throws NullPointerException{
 		return mazes.get(name).getMaze();
     }
+    @Override
+    public void addMaze(String name, Maze3D maze) {
+        mazes.put(name, new Maze3DSearchable<Position>(maze));
+    }
 
     @Override
     public void exit() throws InterruptedException {

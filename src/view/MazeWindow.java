@@ -48,7 +48,7 @@ public class MazeWindow extends BaseWindow implements View {
 	private boolean solutionAvailable = false;
 	
 	Button btnGenerateMaze, btnSolveMaze, btnSaveMaze, btnLoadMaze, btnSaveProperties, btnGetClue;
-	Label lblName;
+	Label lblName, lblFloorNumber;
 	Combo comboMazes;
 
 	private String selectedMazeName;
@@ -69,7 +69,7 @@ public class MazeWindow extends BaseWindow implements View {
 		btnGenerateMaze.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
 
 		mazeDisplay = new MazeDisplay(shell, SWT.BORDER);
-		mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
+		mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 9));
 		mazeDisplay.setFocus();
 		
 		btnSolveMaze = new Button(shell, SWT.PUSH);
@@ -97,9 +97,14 @@ public class MazeWindow extends BaseWindow implements View {
 		
 		lblName = new Label(shell, SWT.NONE);
 		lblName.setText("Mazes:");
+		lblName.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
 		
 		comboMazes = new Combo(shell, SWT.BORDER | SWT.READ_ONLY);
 		comboMazes.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
+		
+		lblFloorNumber = new Label(shell, SWT.NONE);
+		lblFloorNumber.setText("Floor:");
+		lblFloorNumber.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false, 1, 1));
 
 		//------Adding listeners-----		
 		
@@ -136,7 +141,6 @@ public class MazeWindow extends BaseWindow implements View {
 					try {
 						Thread.sleep(250);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 	            setChanged();
@@ -284,13 +288,31 @@ public class MazeWindow extends BaseWindow implements View {
 					case SWT.F1:
 						setChanged();
 			   			if (mazeDisplay.getMazeData(MAZE_FLOOR_DOWN)[pos.x][pos.y] == 0)
+			   			{
 			   				notifyObservers("character_moved " + selectedMazeName + " " + pos.x + " " + pos.y + " " + (pos.z - 2));
+			   				int value = pos.z - 2;
+			   				display.asyncExec(new Runnable() {
+			   					@Override
+			   					public void run() {
+		   							lblFloorNumber.setText("Floor: " + value);
+			   					}
+			   				});
+			   			}
 						break;
 						
 					case SWT.F2:
 						setChanged();
 			   			if (mazeDisplay.getMazeData(MAZE_FLOOR_UP)[pos.x][pos.y] == 0)
+			   			{
 			   				notifyObservers("character_moved " + selectedMazeName + " " + pos.x + " " + pos.y + " " + (pos.z + 2));
+			   				int value = pos.z + 2;
+			   				display.asyncExec(new Runnable() {
+			   					@Override
+			   					public void run() {
+		   							lblFloorNumber.setText("Floor: " + value);
+			   					}
+			   				});
+			   			}
 						break;
 				}
 			}
@@ -366,16 +388,6 @@ public class MazeWindow extends BaseWindow implements View {
 	@Override
 	public void notifyMazeIsReady(String mazeName) {
 		displayMessage("Maze " + mazeName + " is ready");
-		display.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				comboMazes.add(mazeName);
-				comboMazes.select(comboMazes.getItemCount() - 1);
-				btnSaveMaze.setEnabled(true);
-				btnSolveMaze.setEnabled(true);
-				btnGetClue.setEnabled(true);
-			}
-		});
 /*
 		setChanged();
 		notifyObservers("get_maze " + mazeName);
@@ -413,11 +425,22 @@ public class MazeWindow extends BaseWindow implements View {
 	 * @param Maze3D Instance of the current maze
 	 */
 	@Override
-	public void setSelectedMaze(Maze3D maze) {
+	public void setSelectedMaze(String mazeName, Maze3D maze) {
 		this.selectedMaze = maze;
 		this.goalPosition = selectedMaze.getGoalPosition();
 		this.startPosition = selectedMaze.getStartPosition();
 		mazeDisplay.setCharacterStartPosition(startPosition);
+		display.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				lblFloorNumber.setText("Floor: 1");
+				comboMazes.add(mazeName);
+				comboMazes.select(comboMazes.getItemCount() - 1);
+				btnSaveMaze.setEnabled(true);
+				btnSolveMaze.setEnabled(true);
+				btnGetClue.setEnabled(true);
+			}
+		});
 	}
 	
 	/**

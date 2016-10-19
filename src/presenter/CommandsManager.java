@@ -354,7 +354,8 @@ public class CommandsManager {
         @Override
         public void doCommand(Object[] args) {
         	try {
-	        	view.setSelectedMaze((Maze3D)args[0]);
+	        	view.setSelectedMaze((String)args[0], (Maze3D)args[1]);
+	        	model.addMaze((String)args[0], (Maze3D)args[1]);
         	}
         	catch (ArrayIndexOutOfBoundsException ex) {
         		view.displayMessage("Not enough arguments!");

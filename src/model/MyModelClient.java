@@ -22,13 +22,9 @@ import java.util.zip.GZIPOutputStream;
 import algorithms.IO.MyCompressorOutputStream;
 import algorithms.IO.MyDecompressorInputStream;
 import algorithms.demo.Maze3DSearchable;
-import algorithms.demo.MazeSearcherFactory;
-import algorithms.mazeGenerators.ChooseRandomNode;
-import algorithms.mazeGenerators.GrowingTreeGenerator3D;
 import algorithms.mazeGenerators.Maze3D;
 import algorithms.mazeGenerators.Position;
 import algorithms.mazeGenerators.SimpleMaze3DGenerator;
-import algorithms.search.Searcher;
 import algorithms.search.Solution;
 import presenter.Properties;
 import presenter.PropertiesLoader;
@@ -95,12 +91,6 @@ public class MyModelClient extends Observable implements Model {
 		        objToSend[3] = rows;
 		        objToSend[4] = layers;
 	    		networkHandler.sendToServer(objToSend);
-				/*GrowingTreeGenerator3D generator = new GrowingTreeGenerator3D(new ChooseRandomNode());
-	            Maze3D maze = generator.generate(cols, rows, layers);
-	            mazes.put(name, new Maze3DSearchable<Position>(maze));
-				setChanged();
-				notifyObservers("maze_ready " + name);
-				return name;*/
 			}
 		});
     }

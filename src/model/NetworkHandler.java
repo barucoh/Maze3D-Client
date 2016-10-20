@@ -86,7 +86,9 @@ public class NetworkHandler extends Observable {
 	}
 	
 	public void terminateClient() {
-		requestsToServer.shutdownNow();
-		responseFromServer.shutdownNow();
+		this.online = false;
+		this.requestsToServer.shutdownNow();
+		this.responseFromServer.shutdownNow();
+		
 	}
 }

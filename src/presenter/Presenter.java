@@ -47,7 +47,7 @@ public class Presenter implements Observer {
 			view.displayMessage("Command doesn't exist");
 			//command = cliMapper.get("print_menu");
 		}*/
-		if (o == view || arg.toString().toUpperCase() == "EXIT" ) {
+		if (o == view || arg.toString().toUpperCase().equals("EXIT")) {
 			//Coming from View
 		    String input = (String)arg;
 		    String cmdStr = input.split(" ")[0].toLowerCase();

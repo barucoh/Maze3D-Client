@@ -19,6 +19,7 @@ import presenter.Command;
  */
 public interface View {
     void start();
+    void exit();
     void displaySolution(Solution<Position> solution);
     void displayDirectory(String path);
     void notifyMazeIsReady(String name);

@@ -202,6 +202,7 @@ public class CommandsManagerClient {
         public void doCommand(String[] args) {
             try {
             	model.exit();
+            	view.exit();
             }
             catch (Exception ex) {
             	ex.printStackTrace();

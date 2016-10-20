@@ -643,4 +643,14 @@ public class MazeWindow extends BaseWindow implements View {
 	public void moveCharacter(Position position) {
 		mazeDisplay.getCharacter().setPos(position);
 	}
+	
+	@Override
+	public void exit() {
+		display.asyncExec(new Runnable() {
+			public void run() {
+				if (!shell.isDisposed())
+					shell.dispose();
+			}
+		});
+	}
 }

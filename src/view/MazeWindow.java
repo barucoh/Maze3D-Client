@@ -26,7 +26,6 @@ import algorithms.mazeGenerators.Maze3D;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import algorithms.search.State;
-import model.Model;
 
 /**
  * This is the main game window.
@@ -137,7 +136,7 @@ public class MazeWindow extends BaseWindow implements View {
 			public void widgetSelected(SelectionEvent arg0) { 
 				setChanged();
 				notifyObservers("solve " + selectedMazeName + " BFS");
-				if (solutionAvailable == false)
+				while (solutionAvailable == false)
 					try {
 						Thread.sleep(250);
 					} catch (InterruptedException e) {
@@ -375,9 +374,7 @@ public class MazeWindow extends BaseWindow implements View {
 		timer.scheduleAtFixedRate(task, 0, 500);
 	}
 	@Override
-	public void displayDirectory(String path) {
-		// TODO Auto-generated method stub
-	}
+	public void displayDirectory(String path) {	}
 	
 	/**
 	 * Once the new generated maze is ready, we can enable all

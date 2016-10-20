@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,14 +48,17 @@ public class NetworkHandler extends Observable {
 						updateModel(objRecieved);
 						//setChanged();
 						//notifyObservers(objRecieved);
-					}catch(IOException ex){
-						ex.printStackTrace();
 					}catch (ClassNotFoundException ex) {
+						ex.printStackTrace();
+					}catch(SocketException ex){
+						updateModel("EXIT");
+						online = false;
+					}catch(IOException ex){
 						ex.printStackTrace();
 					}
 				}
 			}
-		});		
+		});
 	}
 	
 	public void sendToServer(Object objToSend) {
@@ -79,5 +83,10 @@ public class NetworkHandler extends Observable {
 	
 	public void updateModel(Object objRecieved) {
 		model.updateFromServer(objRecieved);
+	}
+	
+	public void terminateClient() {
+		requestsToServer.shutdownNow();
+		responseFromServer.shutdownNow();
 	}
 }

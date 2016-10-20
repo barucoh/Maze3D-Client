@@ -4,7 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import model.MyModel;
+import model.MyModelClient;
 import model.NetworkHandler;
 import presenter.Presenter;
 import view.MazeWindow;
@@ -19,7 +19,7 @@ public class RunClient {
 		//ObjectInputStream inFromServer = new ObjectInputStream(theServer.getInputStream());
     	
 		MazeWindow window = new MazeWindow();
-		MyModel model = new MyModel();
+		MyModelClient model = new MyModelClient();
 		
 		NetworkHandler networkHandler = new NetworkHandler(model, theServer); //outToServer);//, inFromServer);
 		model.setNetworkHandler(networkHandler);

@@ -43,7 +43,7 @@ import view.View;
  * @see View
  * @see Controller
  */
-public class MyModel extends Observable implements Model {
+public class MyModelClient extends Observable implements Model {
     NetworkHandler networkHandler;
     
     private Map<String, Maze3DSearchable<Position>> mazes;
@@ -54,7 +54,7 @@ public class MyModel extends Observable implements Model {
     
 	private ExecutorService executor;
 
-    public MyModel() {
+    public MyModelClient() {
     	PropertiesSaver.getInstance();
 		properties = PropertiesLoader.getInstance().getProperties();
 		if (properties != null) {
@@ -126,19 +126,15 @@ public class MyModel extends Observable implements Model {
     		if (solutions.get(mazeName) != null) { }
     		else {
     			mazeClues.put(mazeName, 0);
-    			executor.submit(new Callable<Solution<Position>>() {
+    			executor.execute(new Runnable() {
 					@Override
-					public Solution<Position> call() throws Exception {
-				        Maze3DSearchable<Position> maze = mazes.get(mazeName);
-				        Searcher<Position> searcher;
-			            MazeSearcherFactory msf = new MazeSearcherFactory();
-			            searcher = msf.getSearcher(strategy);
-		
-			            Solution<Position> sol = searcher.search(maze);
-			            setChanged();
-			            notifyObservers("solution_ready " + mazeName);
-			            solutions.put(mazeName, sol);
-			            return sol;
+					public void run() {
+						Object [] objToSend;
+				        objToSend = new Object[3];
+				        objToSend[0] = "solve";
+				        objToSend[1] = mazeName;
+				        objToSend[2] = strategy;
+			    		networkHandler.sendToServer(objToSend);
 					}
     			});
 			}
@@ -164,6 +160,7 @@ public class MyModel extends Observable implements Model {
         
         this.executor.shutdown();
         this.executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+        this.networkHandler.terminateClient();
     }
     
     @Override
@@ -245,8 +242,12 @@ public class MyModel extends Observable implements Model {
     }
     
     @Override
-    public Solution<Position> getSolution(String name) {
-    	return solutions.get(name);
+    public void getSolution(String name) {
+		Object [] objToSend;
+        objToSend = new Object[2];
+        objToSend[0] = "display_solution";
+        objToSend[1] = name;
+		networkHandler.sendToServer(objToSend);
     }
     
     @Override

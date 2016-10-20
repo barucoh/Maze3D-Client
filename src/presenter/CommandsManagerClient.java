@@ -21,11 +21,11 @@ import view.View;
  * @see CLI
  * @see Presenter
  */
-public class CommandsManager {
+public class CommandsManagerClient {
 	private Model model;
 	private View view;
 
-    public CommandsManager(Model model, View  view) {
+    public CommandsManagerClient(Model model, View  view) {
         this.model = model;
         this.view = view;
     }
@@ -199,7 +199,14 @@ public class CommandsManager {
     	private ExitCommand() { this.setVisibility(true); }
 
     	@Override
-        public void doCommand(String[] args) { }
+        public void doCommand(String[] args) {
+            try {
+            	model.exit();
+            }
+            catch (Exception ex) {
+            	ex.printStackTrace();
+            }    		
+    	}
         @Override
         public void doCommand(Object[] args) {
             try {
@@ -310,10 +317,10 @@ public class CommandsManager {
     	@Override
         public void doCommand(String[] args) {
         	try {
-        		if (model.getProperties().getSolveMazeAlgorithm().equals("BFS"))
+        		//if (model.getProperties().getSolveMazeAlgorithm().equals("BFS"))
         			model.solveMaze(args[0], "BFS");
-        		else
-            		model.solveMaze(args[0], "DFS");
+        		//else
+            		//model.solveMaze(args[0], "DFS");
         	}
         	catch (ArrayIndexOutOfBoundsException ex) {
         		view.displayMessage("Not enough arguments!");

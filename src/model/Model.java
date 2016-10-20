@@ -31,7 +31,7 @@ public interface Model {
     void setSolution(String name, Solution<Position> solution);
     void updateFromServer(Object objRecieved);
     void exit() throws InterruptedException;
-    Solution<Position> getSolution(String name);
+    void getSolution(String name);
     Position getClue(String name);
     Maze3D getMaze(String mazeName) throws NullPointerException;
     void getCrossSection(String name, String section, int index);

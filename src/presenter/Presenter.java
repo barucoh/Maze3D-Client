@@ -19,14 +19,14 @@ import view.View;
 public class Presenter implements Observer {
 	private Model model;
 	private View view;
-	private CommandsManager commandsManager;
+	private CommandsManagerClient commandsManager;
 	private HashMap<String, Command> cliMapper;
 	
 	public Presenter(Model model, View view) {
 		this.model = model;
 		this.view = view;
 		
-		commandsManager = new CommandsManager(model, view);
+		commandsManager = new CommandsManagerClient(model, view);
 		cliMapper = commandsManager.getCommandsMap();
 	}
 	
@@ -47,10 +47,10 @@ public class Presenter implements Observer {
 			view.displayMessage("Command doesn't exist");
 			//command = cliMapper.get("print_menu");
 		}*/
-		if (o == view) {
+		if (o == view || arg.toString().toUpperCase() == "EXIT" ) {
 			//Coming from View
 		    String input = (String)arg;
-		    String cmdStr = input.split(" ")[0];
+		    String cmdStr = input.split(" ")[0].toLowerCase();
 	        String[] argsStr = null;
 	        
 	        argsStr = input.substring(input.indexOf(" ") + 1).split(" ");

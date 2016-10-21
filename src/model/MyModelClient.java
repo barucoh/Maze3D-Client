@@ -241,9 +241,12 @@ public class MyModelClient extends Observable implements Model {
     }
     
     @Override
-    public Position getClue(String name) {
-    	mazeClues.put(name, mazeClues.get(name).intValue() + 1);
-    	return solutions.get(name).getStates().get(mazeClues.get(name)).getValue();
+    public void getClue(String name) {
+		Object [] objToSend;
+        objToSend = new Object[2];
+        objToSend[0] = "get_clue";
+        objToSend[1] = name;
+		networkHandler.sendToServer(objToSend);
     }
     
     @Override

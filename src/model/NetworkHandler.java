@@ -67,18 +67,12 @@ public class NetworkHandler extends Observable {
 			public void run() {
 				try{
 					serverOutputStream.writeObject(objToSend);
-					//serverOutputStream.flush();
-					//serverInputStream = new ObjectInputStream(socket.getInputStream());
-					//objRecieved = serverInputStream.readObject();
-					//updateModel(objRecieved);
-					//setChanged();
-					//notifyObservers(objRecieved);
+					serverOutputStream.flush();
 				}catch(IOException ex){
 					ex.printStackTrace();
 				}
 			}
 		});
-		//while(!serverInputStream.readObject().equals(null)) { }
 	}
 	
 	public void updateModel(Object objRecieved) {

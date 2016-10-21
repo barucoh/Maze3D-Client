@@ -32,7 +32,7 @@ public interface Model {
     void updateFromServer(Object objRecieved);
     void exit() throws InterruptedException;
     void getSolution(String name);
-    Position getClue(String name);
+    void getClue(String name);
     Maze3D getMaze(String mazeName) throws NullPointerException;
     void getCrossSection(String name, String section, int index);
     void addMaze(String name, Maze3D maze);

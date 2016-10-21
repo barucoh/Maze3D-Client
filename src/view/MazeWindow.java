@@ -337,7 +337,12 @@ public class MazeWindow extends BaseWindow implements View {
 	public void setNextStep(Position nextStep) {
 		setChanged();
 		notifyObservers("character_moved " + selectedMazeName + " " + nextStep.x + " " + nextStep.y + " " + nextStep.z);
-		mazeDisplay.redraw();
+		display.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				mazeDisplay.redraw();
+			}
+		});
 	}
 	/**
 	 * This method will start a timer task and every 500 ms
@@ -642,6 +647,12 @@ public class MazeWindow extends BaseWindow implements View {
 	@Override
 	public void moveCharacter(Position position) {
 		mazeDisplay.getCharacter().setPos(position);
+		if (position.equals(goalPosition))
+		{
+			displayMessage("Congrajulations! you have finished the maze!");
+			btnSolveMaze.setEnabled(false);
+			btnGetClue.setEnabled(false);
+		}
 	}
 	
 	@Override

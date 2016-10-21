@@ -571,7 +571,7 @@ public class MazeWindow extends BaseWindow implements View {
 		String[] filterExt = { "*.maz" };
 		saveMaze.setFilterExtensions(filterExt);
 		String fileName = saveMaze.open();
-		if (fileName != null || fileName != "") {
+		if (fileName != null && fileName != "") {
 			int length = fileName.split("\\\\").length;
 			String mazeName = fileName.split("\\\\")[length - 1].split("\\.")[0];
 			System.out.println(mazeName);

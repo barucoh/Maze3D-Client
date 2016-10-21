@@ -284,8 +284,13 @@ public class MyModelClient extends Observable implements Model {
                     out.write(arr.length / 255);
                     out.write(arr.length % 255);
                     out.write(arr);
+            		Object [] objToSend;
+                    objToSend = new Object[3];
+                    objToSend[0] = "maze_saved";
+                    objToSend[1] = mazeName;
+                    objToSend[2] = fileName;
     	            setChanged();
-    	            notifyObservers("maze_saved " + mazeName + " " + fileName);
+    	            notifyObservers(objToSend);
                 } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -294,8 +299,12 @@ public class MyModelClient extends Observable implements Model {
                     close(out);
                 }
             } else {
+        		Object [] objToSend;
+                objToSend = new Object[2];
+                objToSend[0] = "maze_not_found";
+                objToSend[1] = mazeName;
 	            setChanged();
-	            notifyObservers("maze_not_found " + mazeName);
+	            notifyObservers(objToSend);
             }
         }
 
@@ -320,7 +329,7 @@ public class MyModelClient extends Observable implements Model {
     			oos.writeObject(mazes);
     			oos.writeObject(solutions);
                 setChanged();
-                notifyObservers("mazes_solutions_saved " + fileName);	
+                notifyObservers("mazes_solutions_saved " + fileName);
     		} catch (FileNotFoundException e) {
                 setChanged();
                 notifyObservers("mazes_solutions_save_failed " + fileName);
@@ -359,8 +368,12 @@ public class MyModelClient extends Observable implements Model {
                     byte[] mazeInBytes = new byte[size];
                     in.read(mazeInBytes);
                     mazes.put(mazeName, new Maze3DSearchable<Position>(new Maze3D(mazeInBytes)));
+            		Object [] objToSend;
+                    objToSend = new Object[2];
+                    objToSend[0] = "maze_loaded";
+                    objToSend[1] = mazeName;
     	            setChanged();
-    	            notifyObservers("maze_loaded " + mazeName);
+    	            notifyObservers(objToSend);
                 } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -369,8 +382,12 @@ public class MyModelClient extends Observable implements Model {
                     close(in);
                 }
             } else{
+        		Object [] objToSend;
+                objToSend = new Object[2];
+                objToSend[0] = "maze_already_exists";
+                objToSend[1] = mazeName;
 	            setChanged();
-	            notifyObservers("maze_already_exists " + mazeName);
+	            notifyObservers(objToSend);
             }
         }
 

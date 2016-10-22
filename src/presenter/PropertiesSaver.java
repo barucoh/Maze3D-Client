@@ -16,10 +16,10 @@ public class PropertiesSaver {
 		return instance;
 	}
 	
-	public static void saveProperties(Properties properties) {
+	public static void saveProperties(String fileName, Properties properties) {
 		XMLEncoder xmlEncoder = null;
 		try {
-			xmlEncoder = new XMLEncoder(new FileOutputStream("properties.xml"));
+			xmlEncoder = new XMLEncoder(new FileOutputStream(fileName + "-properties.xml"));
 			xmlEncoder.writeObject(properties);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

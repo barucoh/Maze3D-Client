@@ -16,6 +16,7 @@ public class NetworkHandler extends Observable {
 	ExecutorService responseFromServer;
 	Object objRecieved, objToSend;
 	Socket socket;
+
 	Model model;
 	
 	public boolean online = false;
@@ -43,19 +44,21 @@ public class NetworkHandler extends Observable {
 			public void run() {
 				while (online)
 				{
-					try{
-						objRecieved = serverInputStream.readObject();
-						updateModel(objRecieved);
-						//setChanged();
-						//notifyObservers(objRecieved);
-					}catch (ClassNotFoundException ex) {
-						ex.printStackTrace();
-					}catch(SocketException ex){
-						updateModel("EXIT");
-						online = false;
-					}catch(IOException ex){
-						ex.printStackTrace();
-					}
+					//synchronized (this) {
+						try{
+							objRecieved = serverInputStream.readObject();
+							updateModel(objRecieved);
+							//setChanged();
+							//notifyObservers(objRecieved);
+						}catch (ClassNotFoundException ex) {
+							ex.printStackTrace();
+						}catch(SocketException ex){
+							updateModel("EXIT");
+							online = false;
+						}catch(IOException ex){
+							ex.printStackTrace();
+						}
+					//}
 				}
 			}
 		});
@@ -65,14 +68,20 @@ public class NetworkHandler extends Observable {
 		requestsToServer.execute(new Runnable() {
 			@Override
 			public void run() {
-				try{
-					serverOutputStream.writeObject(objToSend);
-					serverOutputStream.flush();
-				}catch(IOException ex){
-					ex.printStackTrace();
-				}
+				//synchronized (this) {
+					try{
+						serverOutputStream.writeObject(objToSend);
+						serverOutputStream.flush();
+					}catch(IOException ex){
+						ex.printStackTrace();
+					}
+				//}
 			}
 		});
+	}
+	
+	public Socket getSocket() {
+		return socket;
 	}
 	
 	public void updateModel(Object objRecieved) {
@@ -83,6 +92,5 @@ public class NetworkHandler extends Observable {
 		this.online = false;
 		this.requestsToServer.shutdownNow();
 		this.responseFromServer.shutdownNow();
-		
 	}
 }

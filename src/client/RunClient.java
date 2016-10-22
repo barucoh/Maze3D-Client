@@ -1,6 +1,5 @@
 package client;
 
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import model.MyModelClient;
@@ -14,7 +13,7 @@ public class RunClient {
 		Socket theServer = new Socket("localhost",5400);
 		System.out.println("connected to server!");
 		
-		PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+		//PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 		//ObjectInputStream inFromServer = new ObjectInputStream(theServer.getInputStream());
     	
 		MazeWindow window = new MazeWindow();

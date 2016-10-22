@@ -22,6 +22,8 @@ public abstract class BaseWindow extends Observable {
 		display = new Display();
 		shell = new Shell(display);
 		
+		shell.setSize(500, 400);
+		
 		initWidgets();
 		shell.open();		
 		

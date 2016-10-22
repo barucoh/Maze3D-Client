@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_101" class="java.beans.XMLDecoder">
+ <object class="presenter.Properties">
+  <void property="generateMazeAlgorithm">
+   <string>Growing_Tree</string>
+  </void>
+  <void property="numOfThreads">
+   <int>10</int>
+  </void>
+  <void property="solveMazeAlgorithm">
+   <string>BFS</string>
+  </void>
+ </object>
+</java>

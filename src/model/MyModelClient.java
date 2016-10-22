@@ -45,21 +45,14 @@ public class MyModelClient extends Observable implements Model {
     private Map<String, Maze3DSearchable<Position>> mazes;
     private Map<String, Solution<Position>> solutions;
     private Map<String, Integer> mazeClues;
+    private String clientIdentification;
     
     public Properties properties;
     
 	private ExecutorService executor;
 
     public MyModelClient() {
-    	PropertiesSaver.getInstance();
-		properties = PropertiesLoader.getInstance().getProperties();
-		if (properties != null) {
-			executor = Executors.newFixedThreadPool(properties.getNumOfThreads());
-			//loadMazesAndSolutions(properties.getMazeSolutionsFileName());
-		}
-		else
-			executor = Executors.newFixedThreadPool(50);
-		
+    	PropertiesSaver.getInstance();		
         this.mazes = new ConcurrentHashMap<>();
         this.solutions = new HashMap<>();
         this.mazeClues = new HashMap<String, Integer>();
@@ -67,6 +60,18 @@ public class MyModelClient extends Observable implements Model {
     
     public void setNetworkHandler(NetworkHandler networkHandler) {
 		this.networkHandler = networkHandler;
+    	this.clientIdentification = networkHandler.getSocket().getInetAddress().getHostName() + "-" + networkHandler.getSocket().getLocalPort();
+		try {
+			properties = PropertiesLoader.getInstance(clientIdentification).getProperties();
+			executor = Executors.newFixedThreadPool(properties.getNumOfThreads());
+		}
+		catch (Exception ex) {
+			properties = new Properties();
+			properties.setGenerateMazeAlgorithm("Growing_Tree");
+			properties.setNumOfThreads(10);
+			properties.setSolveMazeAlgorithm("BFS");
+			executor = Executors.newFixedThreadPool(50);
+		}
     }
     
     public void updateFromServer(Object objRecieved) {
@@ -84,12 +89,13 @@ public class MyModelClient extends Observable implements Model {
 			@Override
 			public void run() {
 				Object [] objToSend;
-		        objToSend = new Object[5];
+		        objToSend = new Object[6];
 		        objToSend[0] = "generate_3d_maze";
 		        objToSend[1] = name;
 		        objToSend[2] = cols;
 		        objToSend[3] = rows;
 		        objToSend[4] = layers;
+		        objToSend[5] = properties.getGenerateMazeAlgorithm();
 	    		networkHandler.sendToServer(objToSend);
 			}
 		});
@@ -97,15 +103,18 @@ public class MyModelClient extends Observable implements Model {
 
 	@Override
     public void generateMazeSimple(String name, int cols, int rows, int layers) {
-		executor.submit(new Callable<String>() {
+		executor.execute(new Runnable() {
 			@Override
-			public String call() throws Exception {
-				SimpleMaze3DGenerator generator = new SimpleMaze3DGenerator();
-	            Maze3D maze = generator.generate(cols, rows, layers);
-	            mazes.put(name, new Maze3DSearchable<Position>(maze));
-				setChanged();
-				notifyObservers("maze_ready " + name);
-				return name;
+			public void run() {				
+				Object [] objToSend;
+		        objToSend = new Object[6];
+		        objToSend[0] = "generate_3d_maze";
+		        objToSend[1] = name;
+		        objToSend[2] = cols;
+		        objToSend[3] = rows;
+		        objToSend[4] = layers;
+		        objToSend[5] = properties.getGenerateMazeAlgorithm();
+	    		networkHandler.sendToServer(objToSend);
 			}
 		});
     }
@@ -145,7 +154,7 @@ public class MyModelClient extends Observable implements Model {
 
     @Override
     public void exit() throws InterruptedException {
-		PropertiesSaver.saveProperties(this.properties);
+		PropertiesSaver.saveProperties(clientIdentification, this.properties);
         //saveMazesAndSolutions(this.properties.getMazeSolutionsFileName());
         
         this.executor.shutdown();
@@ -252,14 +261,20 @@ public class MyModelClient extends Observable implements Model {
     @Override
     public void saveProperties(Properties properties) {
     	this.properties = properties;
-    	PropertiesSaver.saveProperties(properties);
+    	PropertiesSaver.saveProperties(clientIdentification, properties);
     	setChanged();
-    	notifyObservers("properties_saved");
+    	Object [] objToSend = new Object[1];
+    	objToSend[0] = "properties_saved";
+    	notifyObservers(objToSend);
     }
     @Override
     public void loadProperties() {
-		properties = PropertiesLoader.getInstance().getProperties();
-		executor = Executors.newFixedThreadPool(properties.getNumOfThreads());
+		try {
+			properties = PropertiesLoader.getInstance(clientIdentification).getProperties();		
+			executor = Executors.newFixedThreadPool(properties.getNumOfThreads());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}		
     	setChanged();
     	notifyObservers("properties_loaded");
     }

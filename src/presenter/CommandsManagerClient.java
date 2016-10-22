@@ -229,10 +229,10 @@ public class CommandsManagerClient {
 	            int cols = Integer.parseInt(args[1]);
 	            int rows = Integer.parseInt(args[2]);
 	            int layers = Integer.parseInt(args[3]);
-	            //if (model.getProperties().getGenerateMazeAlgorithm().equals("Growing_Tree"))
+	            if (model.getProperties().getGenerateMazeAlgorithm().equals("Growing_Tree"))
 	            	model.generateMazeGrowingTree(name, cols, rows, layers);
-	            //else
-	            	//model.generateMazeSimple(name, cols, rows, layers);
+	            else
+	            	model.generateMazeSimple(name, cols, rows, layers);
     		}
 	    	catch (ArrayIndexOutOfBoundsException ex) {
 	    		view.displayMessage("Not enough arguments!");
@@ -318,10 +318,10 @@ public class CommandsManagerClient {
     	@Override
         public void doCommand(String[] args) {
         	try {
-        		//if (model.getProperties().getSolveMazeAlgorithm().equals("BFS"))
+        		if (model.getProperties().getSolveMazeAlgorithm().equals("BFS"))
         			model.solveMaze(args[0], "BFS");
-        		//else
-            		//model.solveMaze(args[0], "DFS");
+        		else
+            		model.solveMaze(args[0], "DFS");
         	}
         	catch (ArrayIndexOutOfBoundsException ex) {
         		view.displayMessage("Not enough arguments!");

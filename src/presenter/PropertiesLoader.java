@@ -8,20 +8,20 @@ public class PropertiesLoader {
 	private static PropertiesLoader instance;
 	private Properties properties;
 	
-	private PropertiesLoader() 
+	private PropertiesLoader(String fileName) throws Exception 
 	{
 		try {
-			XMLDecoder decoder = new XMLDecoder(getClass().getClassLoader().getResourceAsStream("properties.xml"));
+			XMLDecoder decoder = new XMLDecoder(new FileInputStream(fileName + "-properties.xml"));
 			properties = (Properties)decoder.readObject();
 			decoder.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 	
-	public static PropertiesLoader getInstance() {
+	public static PropertiesLoader getInstance(String fileName) throws Exception {
 		if (instance == null) 
-			instance = new PropertiesLoader();
+			instance = new PropertiesLoader(fileName);
 		return instance;
 	}
 	
